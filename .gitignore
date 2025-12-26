@@ -4,10 +4,6 @@
 target/
 *.class
 *.log
-.mvn/
-mvnw
-mvnw.cmd
-.mvn/wrapper/maven-wrapper.jar
 
 # Allow build folders inside source directories
 !**/src/main/**/target/
