@@ -27,9 +27,11 @@ Modern URL shortener service built with Spring Boot, MongoDB, and Redis.
 ## API Endpoints 📡
 
 ### Authentication
+
 - `POST /api/user/login` - User login with Firebase token
 
 ### URL Operations
+
 - `POST /api/url/shorten` - Create short URL
 - `POST /api/url/original` - Get original URL
 - `GET /api/url/me` - Get user's URLs
@@ -37,11 +39,13 @@ Modern URL shortener service built with Spring Boot, MongoDB, and Redis.
 - `GET /{shortUrl}` - Redirect to original URL
 
 ### System
-- `GET /api/health` - Health check
+
+- `GET /health` - Health check
 
 ## Setup Instructions 🚀
 
 ### Prerequisites
+
 - Java 17 or higher
 - Maven
 - MongoDB Atlas account
@@ -50,10 +54,10 @@ Modern URL shortener service built with Spring Boot, MongoDB, and Redis.
 
 ### Environment Variables
 
-Create `.env` file or set environment variables:
 ```env
 # MongoDB
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/linkly
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/
+MONGO_DB=linkly
 
 # Redis (Upstash)
 REDIS_HOST=your-redis-host.upstash.io
@@ -63,6 +67,9 @@ REDIS_PASSWORD=your-redis-password
 # Application
 PORT=8000
 BACKEND_URL=http://localhost:8000
+
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:5173
 ```
 
 ### Firebase Setup
@@ -71,6 +78,7 @@ BACKEND_URL=http://localhost:8000
 2. Place it at: `src/main/resources/firebase-service-account.json`
 
 ### Run Application
+
 ```bash
 # Install dependencies
 ./mvnw clean install
@@ -82,6 +90,7 @@ BACKEND_URL=http://localhost:8000
 Application will start at `http://localhost:8000`
 
 ### Run Tests
+
 ```bash
 ./mvnw test
 ```
@@ -89,6 +98,7 @@ Application will start at `http://localhost:8000`
 ## Usage Examples 💡
 
 ### Shorten URL
+
 ```bash
 curl -X POST http://localhost:8000/api/url/shorten \
   -H "Authorization: Bearer YOUR_FIREBASE_TOKEN" \
@@ -102,6 +112,7 @@ curl -X POST http://localhost:8000/api/url/shorten \
 ```
 
 **Response:**
+
 ```json
 {
   "status": true,
@@ -114,6 +125,7 @@ curl -X POST http://localhost:8000/api/url/shorten \
 ### Redirect
 
 Simply visit in browser:
+
 ```
 http://localhost:8000/my-github
 ```
@@ -121,6 +133,7 @@ http://localhost:8000/my-github
 Automatically redirects to `https://github.com` ✅
 
 ## Project Structure 📁
+
 ```
 src/main/java/com/linkly/backend/
 ├── config/          # Configuration classes
@@ -136,20 +149,25 @@ src/main/java/com/linkly/backend/
 ## Features in Detail 🔍
 
 ### QR Code Generation
+
 Every shortened URL gets a QR code automatically.
 
 ### Metadata Extraction
+
 Automatically fetches title, description, and favicon from the target URL.
 
 ### Click Tracking
+
 Track how many times each short URL has been clicked.
 
 ### Expiry Options
+
 - **Date-based:** URL expires after a specific date
 - **Click-based:** URL expires after N clicks
 - **One-time links:** maxClicks = 1
 
 ### Security
+
 - Firebase authentication
 - Rate limiting (100 requests per 15 minutes)
 - CORS protection

@@ -1,5 +1,6 @@
 package com.linkly.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,9 @@ import java.util.Arrays;
 @Configuration
 public class CorsConfig {
 
+    @Value("${app.frontend.url:http://localhost:5173}")
+    private String frontendUrl;
+
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
 
@@ -19,7 +23,8 @@ public class CorsConfig {
 
         config.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:5173",
-                "https://yourdomain.com"
+                "http://localhost:3000",
+                frontendUrl
         ));
 
         config.setAllowedMethods(Arrays.asList(
