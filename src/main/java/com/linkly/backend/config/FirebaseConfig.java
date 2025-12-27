@@ -12,27 +12,45 @@ import java.io.IOException;
 public class FirebaseConfig {
 
     @PostConstruct
-    public void initialize(){
+    public void initialize() {
         try {
-            // Load from classpath (works in JAR/Docker)
-            var resource = getClass().getClassLoader()
-                    .getResourceAsStream("firebase-service-account.json");
+            GoogleCredentials credentials;
             
-            if (resource == null) {
-                throw new IOException("firebase-service-account.json not found in resources");
+            // Try environment variable first (for deployment)
+            String firebaseConfig = System.getenv("FIREBASE_CONFIG");
+            
+            if (firebaseConfig != null && !firebaseConfig.isEmpty()) {
+                // Production: Use environment variable
+                System.out.println("🔥 Loading Firebase from environment variable...");
+                ByteArrayInputStream stream = new ByteArrayInputStream(
+                    firebaseConfig.getBytes(StandardCharsets.UTF_8)
+                );
+                credentials = GoogleCredentials.fromStream(stream);
+            } else {
+                // Development: Use local file
+                System.out.println("🔥 Loading Firebase from classpath...");
+                InputStream resource = getClass().getClassLoader()
+                    .getResourceAsStream("firebase-service-account.json");
+                
+                if (resource == null) {
+                    throw new IOException("firebase-service-account.json not found in resources");
+                }
+                
+                credentials = GoogleCredentials.fromStream(resource);
             }
 
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(resource))
-                    .build();
+                .setCredentials(credentials)
+                .build();
 
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
-                System.out.println("🔥 Firebase initialized successfully!");
+                System.out.println("✅ Firebase initialized successfully!");
             }
 
         } catch (IOException e) {
             System.err.println("❌ Firebase initialization failed: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
